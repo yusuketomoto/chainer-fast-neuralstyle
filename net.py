@@ -11,13 +11,13 @@ class ResidualBlock(chainer.Chain):
         super(ResidualBlock, self).__init__(
             c1=L.Convolution2D(n_in, n_out, ksize, stride, 1, w),
             c2=L.Convolution2D(n_out, n_out, ksize, 1, 1, w),
-            bn1=L.BatchNormalization(n_out),
-            bn2=L.BatchNormalization(n_out)
+            b1=L.BatchNormalization(n_out),
+            b2=L.BatchNormalization(n_out)
         )
 
     def __call__(self, x, test):
-        h = F.relu(self.bn1(self.c1(x), test=test))
-        h = self.bn2(self.c2(h), test=test)
+        h = F.relu(self.b1(self.c1(x), test=test))
+        h = self.b2(self.c2(h), test=test)
         if x.data.shape != h.data.shape:
             xp = chainer.cuda.get_array_module(x.data)
             n, c, hh, ww = x.data.shape
@@ -35,31 +35,31 @@ class FastStyleNet(chainer.Chain):
             c1=L.Convolution2D(3, 32, 9, stride=1),
             c2=L.Convolution2D(32, 64, 3, stride=2),
             c3=L.Convolution2D(64, 128, 3,stride=2),
-            res1=ResidualBlock(128, 128),
-            res2=ResidualBlock(128, 128),
-            res3=ResidualBlock(128, 128),
-            res4=ResidualBlock(128, 128),
-            res5=ResidualBlock(128, 128),
-            dc1=L.Deconvolution2D(128, 64, ksize=3),
-            dc2=L.Deconvolution2D(3, 32, ksize=3),
-            dc3=L.Deconvolution2D(32, 3, ksize=9),
-            bn1=L.BatchNormalization(32),
-            bn2=L.BatchNormalization(64),
-            bn3=L.BatchNormalization(128),
-            bn4=L.BatchNormalization(64),
-            bn5=L.BatchNormalization(32),
+            r1=ResidualBlock(128, 128),
+            r2=ResidualBlock(128, 128),
+            r3=ResidualBlock(128, 128),
+            r4=ResidualBlock(128, 128),
+            r5=ResidualBlock(128, 128),
+            d1=L.Deconvolution2D(128, 64, ksize=3),
+            d2=L.Deconvolution2D(3, 32, ksize=3),
+            d3=L.Deconvolution2D(32, 3, ksize=9),
+            b1=L.BatchNormalization(32),
+            b2=L.BatchNormalization(64),
+            b3=L.BatchNormalization(128),
+            b4=L.BatchNormalization(64),
+            b5=L.BatchNormalization(32),
         )
 
     def __call__(self, x, test=False):
-        h = self.bn1(F.relu(self.c1(x)), test=test)
-        h = self.bn2(F.relu(self.c2(h)), test=test)
-        h = self.bn3(F.relu(self.c3(h)), test=test)
-        h = self.res1(h, test=test),
-        h = self.res2(h, test=test),
-        h = self.res3(h, test=test),
-        h = self.res4(h, test=test),
-        h = self.res5(h, test=test),
-        h = self.bn4(F.relu(self.dc1(h)), test=test),
-        h = self.bn5(F.relu(self.dc2(h)), test=test),
-        y = self.dc3(h)
+        h = self.b1(F.relu(self.c1(x)), test=test)
+        h = self.b2(F.relu(self.c2(h)), test=test)
+        h = self.b3(F.relu(self.c3(h)), test=test)
+        h = self.r1(h, test=test),
+        h = self.r2(h, test=test),
+        h = self.r3(h, test=test),
+        h = self.r4(h, test=test),
+        h = self.r5(h, test=test),
+        h = self.b4(F.relu(self.d1(h)), test=test),
+        h = self.b5(F.relu(self.d2(h)), test=test),
+        y = self.d3(h)
         return y
