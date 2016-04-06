@@ -62,4 +62,4 @@ class FastStyleNet(chainer.Chain):
         h = self.b4(F.relu(self.d1(h)), test=test)
         h = self.b5(F.relu(self.d2(h)), test=test)
         y = self.d3(h)
-        return y
+        return (F.tanh(y) + np.float32(1.0)) * np.float32(127.5)
