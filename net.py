@@ -59,7 +59,7 @@ class FastStyleNet(chainer.Chain):
         h = self.res3(h),
         h = self.res4(h),
         h = self.res5(h),
-        h = self.bh4(F.relu(self.dc1(h)), test=test),
-        h = self.bh5(F.relu(self.dc2(h)), test=test),
-        l = self.dc3(h)
-        return l
+        h = self.bn4(F.relu(self.dc1(h)), test=test),
+        h = self.bn5(F.relu(self.dc2(h)), test=test),
+        y = self.dc3(h)
+        return y
