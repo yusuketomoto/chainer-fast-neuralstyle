@@ -50,7 +50,7 @@ n_iter = n_data / args.batchsize
 print n_iter, 'iterations', n_epoch
 
 model = FastStyleNet()
-vgg = VGG(args.batchsize)
+vgg = VGG()
 serializers.load_npz('vgg16.model', vgg)
 if args.gpu >= 0:
     cuda.get_device(args.gpu).use()

@@ -67,7 +67,7 @@ class FastStyleNet(chainer.Chain):
         return y
 
 class VGG(chainer.Chain):
-    def __init__(self, batchsize=1):
+    def __init__(self):
         super(VGG, self).__init__(
             conv1_1=L.Convolution2D(3, 64, 3, stride=1, pad=1),
             conv1_2=L.Convolution2D(64, 64, 3, stride=1, pad=1),
