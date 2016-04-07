@@ -4,6 +4,7 @@ import numpy as np
 import chainer
 import chainer.links as L
 import chainer.functions as F
+from chainer import Variable
 
 class ResidualBlock(chainer.Chain):
     def __init__(self, n_in, n_out, stride=1, ksize=3):
@@ -64,3 +65,41 @@ class FastStyleNet(chainer.Chain):
         y = self.d3(h)
         # return (F.tanh(y) + 1) * 127.5
         return y
+
+class VGG(chainer.Chain):
+    def __init__(self, batchsize=1):
+        super(VGG, self).__init__(
+            conv1_1=L.Convolution2D(3, 64, 3, stride=1, pad=1),
+            conv1_2=L.Convolution2D(64, 64, 3, stride=1, pad=1),
+
+            conv2_1=L.Convolution2D(64, 128, 3, stride=1, pad=1),
+            conv2_2=L.Convolution2D(128, 128, 3, stride=1, pad=1),
+
+            conv3_1=L.Convolution2D(128, 256, 3, stride=1, pad=1),
+            conv3_2=L.Convolution2D(256, 256, 3, stride=1, pad=1),
+            conv3_3=L.Convolution2D(256, 256, 3, stride=1, pad=1),
+
+            conv4_1=L.Convolution2D(256, 512, 3, stride=1, pad=1),
+            conv4_2=L.Convolution2D(512, 512, 3, stride=1, pad=1),
+            conv4_3=L.Convolution2D(512, 512, 3, stride=1, pad=1),
+
+            conv5_1=L.Convolution2D(512, 512, 3, stride=1, pad=1),
+            conv5_2=L.Convolution2D(512, 512, 3, stride=1, pad=1),
+            conv5_3=L.Convolution2D(512, 512, 3, stride=1, pad=1)
+        )
+        self.train = False
+        self.mean = np.asarray([103.939, 116.779, 123.68], dtype=np.float32)
+        self.batch_mean = np.zeros((batchsize, 3, 256, 256), dtype=np.float32)
+        self.batch_mean[:,0,:,:] = 103.939
+        self.batch_mean[:,1,:,:] = 116.779
+        self.batch_mean[:,2,:,:] = 123.68
+
+    def __call__(self, x):
+        y1 = F.relu(self.conv1_2(F.relu(self.conv1_1(x))))
+        h = F.max_pooling_2d(y1, 2, stride=2)
+        y2 = F.relu(self.conv2_2(F.relu(self.conv2_1(h))))
+        h = F.max_pooling_2d(y2, 2, stride=2)
+        y3 = F.relu(self.conv3_3(F.relu(self.conv3_2(F.relu(self.conv3_1(h))))))
+        h = F.max_pooling_2d(y3, 2, stride=2)
+        y4 = F.relu(self.conv4_3(F.relu(self.conv4_2(F.relu(self.conv4_1(h))))))
+        return [y1, y2, y3, y4]
