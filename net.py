@@ -88,11 +88,10 @@ class VGG(chainer.Chain):
             conv5_3=L.Convolution2D(512, 512, 3, stride=1, pad=1)
         )
         self.train = False
-        self.mean = np.asarray([103.939, 116.779, 123.68], dtype=np.float32)
-        self.batch_mean = np.zeros((batchsize, 3, 256, 256), dtype=np.float32)
-        self.batch_mean[:,0,:,:] = 103.939
-        self.batch_mean[:,1,:,:] = 116.779
-        self.batch_mean[:,2,:,:] = 123.68
+        self.mean = np.asarray(120, dtype=np.float32)
+
+    def preprocess(self, image):
+        return np.rollaxis(image - self.mean, 2)
 
     def __call__(self, x):
         y1 = F.relu(self.conv1_2(F.relu(self.conv1_1(x))))
