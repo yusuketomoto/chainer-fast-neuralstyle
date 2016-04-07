@@ -33,8 +33,8 @@ class FastStyleNet(chainer.Chain):
     def __init__(self):
         super(FastStyleNet, self).__init__(
             c1=L.Convolution2D(3, 32, 9, stride=1, pad=4),
-            c2=L.Convolution2D(32, 64, 3, stride=2, pad=1),
-            c3=L.Convolution2D(64, 128, 3,stride=2, pad=1),
+            c2=L.Convolution2D(32, 64, 4, stride=2, pad=1),
+            c3=L.Convolution2D(64, 128, 4,stride=2, pad=1),
             r1=ResidualBlock(128, 128),
             r2=ResidualBlock(128, 128),
             r3=ResidualBlock(128, 128),
