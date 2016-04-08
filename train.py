@@ -47,7 +47,7 @@ for fn in fs:
 n_data = len(imagepaths)
 print 'num traning images:', n_data
 n_iter = n_data / args.batchsize
-print n_iter, 'iterations', n_epoch
+print n_iter, 'iterations,', n_epoch, 'epochs'
 
 model = FastStyleNet()
 vgg = VGG()
