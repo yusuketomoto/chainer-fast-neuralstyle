@@ -40,5 +40,5 @@ python generate.py <input_image_path> -m <model_path> -o <output_image_path>
 MIT
 
 ## Reference
-- [Perceptual Losses for Real-Time Style Transfer and Super-Resolution](arxiv.org/abs/1603.08155)
+- [Perceptual Losses for Real-Time Style Transfer and Super-Resolution](http://arxiv.org/abs/1603.08155)
 - [chainer-gogh](https://github.com/mattya/chainer-gogh.git) chainer implementation of neural-style. I heavily referenced it, thanks to the author.
