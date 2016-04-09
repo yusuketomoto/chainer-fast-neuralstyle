@@ -63,8 +63,7 @@ class FastStyleNet(chainer.Chain):
         h = self.b4(F.relu(self.d1(h)), test=test)
         h = self.b5(F.relu(self.d2(h)), test=test)
         y = self.d3(h)
-        # return (F.tanh(y) + 1) * 127.5
-        return y
+        return F.tanh(y)*127.5 + 7.5
 
 class VGG(chainer.Chain):
     def __init__(self):
