@@ -13,6 +13,18 @@ def gram_matrix(y):
     # gram = F.batch_matmul(features, features, transb=True)/np.float32(ch*w*h)
     return gram
 
+def total_variation_regularization(x, beta=2):
+    xp = cuda.get_array_module(x.data)
+    wh = Variable(xp.array([[[[1],[-1]],[[1],[-1]],[[1],[-1]]]], dtype=xp.float32))
+    ww = Variable(xp.array([[[[1, -1]],[[1, -1]],[[1, -1]]]], dtype=xp.float32))
+    tvh = lambda x: F.convolution_2d(x, W=wh)
+    tvw = lambda x: F.convolution_2d(x, W=ww)
+
+    dh = tvh(x)
+    dw = tvw(x)
+    tv = (F.sum(dh**2) + F.sum(dw**2)) ** (beta / 2.)
+    return tv
+
 parser = argparse.ArgumentParser(description='Real-time style transfer')
 parser.add_argument('--gpu', '-g', default=-1, type=int,
                     help='GPU ID (negative value indicates CPU)')
@@ -26,7 +38,7 @@ parser.add_argument('--input', '-i', default=None, type=str,
                     help='input model file path without extension')
 parser.add_argument('--output', '-o', default='out', type=str,
                     help='output model file path without extension')
-parser.add_argument('--total_variation_regularization', '-v', default=10e-4, type=float,
+parser.add_argument('--lambda_tv', default=10e-4, type=float,
                     help='weight of total variation regularization according to the paper to be set between 10e-4 and 10e-6.')
 parser.add_argument('--lambda_feat', default=5e0, type=float)
 parser.add_argument('--lambda_style', default=1e2, type=float)
@@ -39,6 +51,7 @@ args = parser.parse_args()
 batchsize = 1 # force batchsize 1 since it cannot train agains mini-batches now.
 
 n_epoch = args.epoch
+lambda_tv = args.lambda_tv
 lambda_f = args.lambda_feat
 lambda_s = args.lambda_style
 fs = os.listdir(args.dataset)
@@ -99,7 +112,8 @@ for epoch in range(n_epoch):
         for f, f_hat, g_s in zip(feature, feature_hat, gram_s):
             L_style += lambda_s * F.mean_squared_error(gram_matrix(f_hat), Variable(g_s.data))
 
-        L = L_feat + L_style
+        L_tv = lambda_tv * total_variation_regularization(y)
+        L = L_feat + L_style + L_tv
 
         print '(epoch {}) batch {}/{}... training loss is...{}'.format(epoch, i, n_iter, L.data)
 
