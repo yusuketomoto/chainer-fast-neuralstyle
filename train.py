@@ -8,8 +8,9 @@ from net import *
 
 def gram_matrix(y):
     b, ch, w, h = y.data.shape
-    features = F.reshape(y, (b, ch, w*h))
-    gram = F.batch_matmul(features, features, transb=True)/np.float32(ch*w*h)
+    features = F.reshape(y, (ch, w*h))
+    gram = F.matmul(features, features, transb=True) / np.float32(ch*w*h)
+    # gram = F.batch_matmul(features, features, transb=True)/np.float32(ch*w*h)
     return gram
 
 parser = argparse.ArgumentParser(description='Real-time style transfer')
@@ -19,8 +20,8 @@ parser.add_argument('--dataset', '-d', default='dataset', type=str,
                     help='dataset directory path (according to the paper, use MSCOCO 80k images)')
 parser.add_argument('--style_image', '-s', type=str, required=True,
                     help='style image path')
-parser.add_argument('--batchsize', '-b', type=int, default=4,
-                    help='batch size (default value is 4)')
+# parser.add_argument('--batchsize', '-b', type=int, default=4,
+#                     help='batch size (default value is 4)')
 parser.add_argument('--input', '-i', default=None, type=str,
                     help='input model file path without extension')
 parser.add_argument('--output', '-o', default='out', type=str,
@@ -33,6 +34,9 @@ parser.add_argument('--epoch', '-e', default=2, type=int)
 parser.add_argument('--lr', '-l', default=1e-3, type=float)
 parser.add_argument('--checkpoint', '-c', default=0, type=int)
 args = parser.parse_args()
+
+# batchsize = args.batchsize
+batchsize = 1 # force batchsize 1 since it cannot train agains mini-batches now.
 
 n_epoch = args.epoch
 lambda_f = args.lambda_feat
@@ -63,8 +67,8 @@ O.setup(model)
 
 style = vgg.preprocess(np.asarray(Image.open(args.style_image).convert('RGB').resize((256,256)), dtype=np.float32))
 style = xp.asarray(style, dtype=xp.float32)
-style_b = xp.zeros((args.batchsize,) + style.shape, dtype=xp.float32)
-for i in range(args.batchsize):
+style_b = xp.zeros((batchsize,) + style.shape, dtype=xp.float32)
+for i in range(batchsize):
     style_b[i] = style
 feature_s = vgg(Variable(style_b, volatile=True))
 gram_s = [gram_matrix(y) for y in feature_s]
@@ -75,10 +79,10 @@ for epoch in range(n_epoch):
         model.zerograds()
         vgg.zerograds()
 
-        indices = range(i * args.batchsize, (i+1) * args.batchsize)
-        x = xp.zeros((args.batchsize, 3, 256, 256), dtype=xp.float32)
+        indices = range(i * batchsize, (i+1) * batchsize)
+        x = xp.zeros((batchsize, 3, 256, 256), dtype=xp.float32)
         for j in range(args.batchsize):
-            x[j] = xp.asarray(Image.open(imagepaths[i*args.batchsize + j]).convert('RGB').resize((256,256)), dtype=np.float32).transpose(2, 0, 1)
+            x[j] = xp.asarray(Image.open(imagepaths[i*batchsize + j]).convert('RGB').resize((256,256)), dtype=np.float32).transpose(2, 0, 1)
 
         x -= 120 # subtract mean
         xc = Variable(x.copy(), volatile=True)
