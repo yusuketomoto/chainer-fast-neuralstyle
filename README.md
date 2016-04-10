@@ -1,6 +1,15 @@
 # Chainer implementation of "Perceptual Losses for Real-Time Style Transfer and Super-Resolution"
 Fast artistic style transfer by using feed forward network.
 
+<img src="https://raw.githubusercontent.com/yusuketomoto/chainer-fast-neuralstyle/master/sample_images/style.jpg" height="200px">
+
+<img src="https://raw.githubusercontent.com/yusuketomoto/chainer-fast-neuralstyle/master/sample_images/tubingen.jpg" height="200px">
+<img src="https://raw.githubusercontent.com/yusuketomoto/chainer-fast-neuralstyle/master/sample_images/output.jpg" height="200px">
+
+- input image size: 512x384
+- process time(CPU): 1.923sec (Core i7-5930K)
+- process time(GPU): 0.297sec (GPU TitanX)
+
 ## Requirement
 - [Chainer](https://github.com/pfnet/chainer)
 ```
