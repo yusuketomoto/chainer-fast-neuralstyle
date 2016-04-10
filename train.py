@@ -63,7 +63,7 @@ for fn in fs:
         imagepaths.append(imagepath)
 n_data = len(imagepaths)
 print 'num traning images:', n_data
-n_iter = n_data / args.batchsize
+n_iter = n_data / batchsize
 print n_iter, 'iterations,', n_epoch, 'epochs'
 
 model = FastStyleNet()
@@ -94,7 +94,7 @@ for epoch in range(n_epoch):
 
         indices = range(i * batchsize, (i+1) * batchsize)
         x = xp.zeros((batchsize, 3, 256, 256), dtype=xp.float32)
-        for j in range(args.batchsize):
+        for j in range(batchsize):
             x[j] = xp.asarray(Image.open(imagepaths[i*batchsize + j]).convert('RGB').resize((256,256)), dtype=np.float32).transpose(2, 0, 1)
 
         x -= 120 # subtract mean
