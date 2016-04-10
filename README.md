@@ -28,7 +28,7 @@ python generate.py <input_image_path> -m <model_path> -o <output_image_path>
 This repo has a pretrained model which was trained with "The starry night" by "Vincent van Gogh" as an example.
 - example:
 ```
-python generate.py sample_images/input_0.jpg -m models/starrynight.model -o sample_images/output_0.jpg
+python generate.py sample_images/tubingen.jpg -m models/starrynight.model -o sample_images/output.jpg
 ```
 
 ## Difference from paper
