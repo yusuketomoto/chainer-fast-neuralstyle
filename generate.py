@@ -22,12 +22,12 @@ if args.gpu >= 0:
     model.to_gpu()
 xp = np if args.gpu < 0 else cuda.cupy
 
+start = time.time()
 image = xp.asarray(Image.open(args.input).convert('RGB'), dtype=xp.float32).transpose(2, 0, 1)
 image = image.reshape((1,) + image.shape)
 image -= 120
 x = Variable(image)
 
-start = time.time()
 y = model(x)
 result = cuda.to_cpu(y.data)
 

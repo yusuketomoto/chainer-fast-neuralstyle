@@ -7,8 +7,8 @@ Fast artistic style transfer by using feed forward network.
 <img src="https://raw.githubusercontent.com/yusuketomoto/chainer-fast-neuralstyle/master/sample_images/output.jpg" height="200px">
 
 - input image size: 512x384
-- process time(CPU): 1.923sec (Core i7-5930K)
-- process time(GPU): 0.297sec (GPU TitanX)
+- process time(CPU): 1.954sec (Core i7-5930K)
+- process time(GPU): 0.398sec (GPU TitanX)
 
 ## Requirement
 - [Chainer](https://github.com/pfnet/chainer)
