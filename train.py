@@ -7,10 +7,9 @@ from chainer import cuda, Variable, optimizers, serializers
 from net import *
 
 def gram_matrix(y):
-    b, ch, w, h = y.data.shape
-    features = F.reshape(y, (ch, w*h))
-    gram = F.matmul(features, features, transb=True) / np.float32(ch*w*h)
-    # gram = F.batch_matmul(features, features, transb=True)/np.float32(ch*w*h)
+    b, ch, h, w = y.data.shape
+    features = F.reshape(y, (b, ch, w*h))
+    gram = F.batch_matmul(features, features, transb=True)/np.float32(ch*w*h)
     return gram
 
 def total_variation_regularization(x, beta=2):
@@ -32,23 +31,22 @@ parser.add_argument('--dataset', '-d', default='dataset', type=str,
                     help='dataset directory path (according to the paper, use MSCOCO 80k images)')
 parser.add_argument('--style_image', '-s', type=str, required=True,
                     help='style image path')
-# parser.add_argument('--batchsize', '-b', type=int, default=4,
-#                     help='batch size (default value is 4)')
+parser.add_argument('--batchsize', '-b', type=int, default=4,
+                    help='batch size (default value is 4)')
 parser.add_argument('--input', '-i', default=None, type=str,
                     help='input model file path without extension')
 parser.add_argument('--output', '-o', default='out', type=str,
                     help='output model file path without extension')
 parser.add_argument('--lambda_tv', default=10e-4, type=float,
                     help='weight of total variation regularization according to the paper to be set between 10e-4 and 10e-6.')
-parser.add_argument('--lambda_feat', default=5e0, type=float)
-parser.add_argument('--lambda_style', default=1e2, type=float)
+parser.add_argument('--lambda_feat', default=1e0, type=float)
+parser.add_argument('--lambda_style', default=1e1, type=float)
 parser.add_argument('--epoch', '-e', default=2, type=int)
 parser.add_argument('--lr', '-l', default=1e-3, type=float)
 parser.add_argument('--checkpoint', '-c', default=0, type=int)
 args = parser.parse_args()
 
-# batchsize = args.batchsize
-batchsize = 1 # force batchsize 1 since it cannot train agains mini-batches now.
+batchsize = args.batchsize
 
 n_epoch = args.epoch
 lambda_tv = args.lambda_tv
