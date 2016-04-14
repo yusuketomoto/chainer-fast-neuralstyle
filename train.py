@@ -12,12 +12,12 @@ def gram_matrix(y):
     gram = F.batch_matmul(features, features, transb=True)/np.float32(ch*w*h)
     return gram
 
-def total_variation_regularization(x, beta=2):
+def total_variation_regularization(x, beta=1):
     xp = cuda.get_array_module(x.data)
     wh = Variable(xp.array([[[[1],[-1]],[[1],[-1]],[[1],[-1]]]], dtype=xp.float32))
     ww = Variable(xp.array([[[[1, -1]],[[1, -1]],[[1, -1]]]], dtype=xp.float32))
-    tvh = lambda x: F.convolution_2d(x, W=wh)
-    tvw = lambda x: F.convolution_2d(x, W=ww)
+    tvh = lambda x: F.convolution_2d(x, W=wh, pad=1)
+    tvw = lambda x: F.convolution_2d(x, W=ww, pad=1)
 
     dh = tvh(x)
     dw = tvw(x)
