@@ -52,6 +52,7 @@ n_epoch = args.epoch
 lambda_tv = args.lambda_tv
 lambda_f = args.lambda_feat
 lambda_s = args.lambda_style
+output = args.output
 fs = os.listdir(args.dataset)
 imagepaths = []
 for fn in fs:
@@ -119,9 +120,9 @@ for epoch in range(n_epoch):
         O.update()
 
         if args.checkpoint > 0 and i % args.checkpoint == 0:
-            serializers.save_npz('models/style_{}_{}.model'.format(epoch, i), model)
+            serializers.save_npz('models/{}_{}_{}.model'.format(output, epoch, i), model)
 
     print 'save "style.model"'
-    serializers.save_npz('models/style_{}.model'.format(epoch), model)
+    serializers.save_npz('models/{}_{}.model'.format(output, epoch), model)
 
-serializers.save_npz('models/style.model'.format(epoch), model)
+serializers.save_npz('models/{}.model'.format(output), model)
