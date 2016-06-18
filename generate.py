@@ -18,7 +18,7 @@ args = parser.parse_args()
 model = FastStyleNet()
 serializers.load_npz(args.model, model)
 if args.gpu >= 0:
-    cuda.get_device(0).use()
+    cuda.get_device(args.gpu).use()
     model.to_gpu()
 xp = np if args.gpu < 0 else cuda.cupy
 
