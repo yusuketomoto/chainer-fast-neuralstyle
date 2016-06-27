@@ -31,8 +31,8 @@ parser.add_argument('--dataset', '-d', default='dataset', type=str,
                     help='dataset directory path (according to the paper, use MSCOCO 80k images)')
 parser.add_argument('--style_image', '-s', type=str, required=True,
                     help='style image path')
-parser.add_argument('--batchsize', '-b', type=int, default=4,
-                    help='batch size (default value is 4)')
+parser.add_argument('--batchsize', '-b', type=int, default=1,
+                    help='batch size (default value is 1)')
 parser.add_argument('--input', '-i', default=None, type=str,
                     help='input model file path without extension')
 parser.add_argument('--output', '-o', default='out', type=str,
