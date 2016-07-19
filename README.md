@@ -38,15 +38,20 @@ python train.py -s <style_image_path> -d <training_dataset_path> -g 0
 python generate.py <input_image_path> -m <model_path> -o <output_image_path>
 ```
 
-This repo has a pretrained model which was trained with "The starry night" by "Vincent van Gogh" as an example.
+This repo has pretrained models as an example.
+
 - example:
 ```
-python generate.py sample_images/tubingen.jpg -m models/starrynight.model -o sample_images/output.jpg
+python generate.py sample_images/tubingen.jpg -m models/composition.model -o sample_images/output.jpg
+```
+or
+```
+python generate.py sample_images/tubingen.jpg -m models/seurat.model -o sample_images/output.jpg
 ```
 
 ## Difference from paper
 - Convolution kernel size 4 instead of 3.
-- Not sure whether adding/subtracting mean image is needed or not. In this implementation mean image subtraction is done before input image is fed into "image transformation network".
+- Training with batchsize(n>=2) causes unstable result.
 
 ## No Backward Compatibility
 ##### Jul. 19, 2016
@@ -59,5 +64,6 @@ MIT
 - [Perceptual Losses for Real-Time Style Transfer and Super-Resolution](http://arxiv.org/abs/1603.08155)
 
 Codes written in this repository based on following nice works, thanks to the author.
+
 - [chainer-gogh](https://github.com/mattya/chainer-gogh.git) Chainer implementation of neural-style. I heavily referenced it.
 - [chainer-cifar10](https://github.com/mitmul/chainer-cifar10) Residual block implementation is referred.
