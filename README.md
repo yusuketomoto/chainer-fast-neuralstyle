@@ -44,6 +44,10 @@ python generate.py sample_images/tubingen.jpg -m models/starrynight.model -o sam
 - Convolution kernel size 4 instead of 3.
 - Not sure whether adding/subtracting mean image is needed or not. In this implementation mean image subtraction is done before input image is fed into "image transformation network".
 
+## No Backward Compatibility
+##### Jul. 19, 2016
+This version is not compatible with the previous versions. You can't use models trained by the previous implementation. Sorry for the inconvenience!
+
 ## License
 MIT
 
