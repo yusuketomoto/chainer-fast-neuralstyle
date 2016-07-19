@@ -96,11 +96,13 @@ for epoch in range(n_epoch):
         for j in range(batchsize):
             x[j] = xp.asarray(Image.open(imagepaths[i*batchsize + j]).convert('RGB').resize((256,256)), dtype=np.float32).transpose(2, 0, 1)
 
-        x -= 120 # subtract mean
         xc = Variable(x.copy(), volatile=True)
         x = Variable(x)
 
         y = model(x)
+
+        xc -= 120
+        y -= 120
 
         feature = vgg(xc)
         feature_hat = vgg(y)
