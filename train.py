@@ -91,7 +91,7 @@ for i in range(batchsize):
 feature_s = vgg(Variable(style_b, volatile=True))
 gram_s = [gram_matrix(y) for y in feature_s]
 
-for epoch in range(m_epoch, n_epoch):
+for epoch in range(m_epoch, m_epoch+n_epoch):
     print 'epoch', epoch
     for i in range(n_iter):
         model.zerograds()
