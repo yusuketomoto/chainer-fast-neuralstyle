@@ -34,7 +34,7 @@ parser.add_argument('--style_image', '-s', type=str, required=True,
 parser.add_argument('--batchsize', '-b', type=int, default=1,
                     help='batch size (default value is 1)')
 parser.add_argument('--input', '-i', default=None, type=str,
-                    help='input model file path without extension')
+                    help='path to input model file')
 parser.add_argument('--output', '-o', default='out', type=str,
                     help='output model file path without extension')
 parser.add_argument('--lambda_tv', default=10e-4, type=float,
