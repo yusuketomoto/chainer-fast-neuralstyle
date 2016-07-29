@@ -33,8 +33,10 @@ parser.add_argument('--style_image', '-s', type=str, required=True,
                     help='style image path')
 parser.add_argument('--batchsize', '-b', type=int, default=1,
                     help='batch size (default value is 1)')
-parser.add_argument('--input', '-i', default=None, type=str,
-                    help='path to input model file')
+parser.add_argument('--initmodel', '-i', default=None, type=str,
+                    help='initialize the model from given file')
+parser.add_argument('--resume', '-r', default=None, type=str,
+                    help='resume the optimization from snapshot')
 parser.add_argument('--output', '-o', default='out', type=str,
                     help='output model file path without extension')
 parser.add_argument('--lambda_tv', default=10e-4, type=float,
@@ -69,11 +71,9 @@ print n_iter, 'iterations,', n_epoch, 'epochs'
 model = FastStyleNet()
 vgg = VGG()
 serializers.load_npz('vgg16.model', vgg)
-if args.input:
-    serializers.load_npz(args.input, model)
-    m_epoch = re.search('\d+', os.path.basename(args.input))
-    m_epoch = int(m_epoch.group(0))+1 if m_epoch else 1
-    print '{} loaded, {} epochs done'.format(args.input, m_epoch)
+if args.initmodel:
+    print 'load model from', args.initmodel
+    serializers.load_npz(args.initmodel, model)
 if args.gpu >= 0:
     cuda.get_device(args.gpu).use()
     model.to_gpu()
@@ -82,6 +82,9 @@ xp = np if args.gpu < 0 else cuda.cupy
 
 O = optimizers.Adam(alpha=args.lr)
 O.setup(model)
+if args.resume:
+    print 'load optimizer state from', args.resume
+    serializers.load_npz(args.resume, O)
 
 style = vgg.preprocess(np.asarray(Image.open(args.style_image).convert('RGB').resize((256,256)), dtype=np.float32))
 style = xp.asarray(style, dtype=xp.float32)
@@ -91,7 +94,7 @@ for i in range(batchsize):
 feature_s = vgg(Variable(style_b, volatile=True))
 gram_s = [gram_matrix(y) for y in feature_s]
 
-for epoch in range(m_epoch, m_epoch+n_epoch):
+for epoch in range(n_epoch):
     print 'epoch', epoch
     for i in range(n_iter):
         model.zerograds()
@@ -129,8 +132,11 @@ for epoch in range(m_epoch, m_epoch+n_epoch):
 
         if args.checkpoint > 0 and i % args.checkpoint == 0:
             serializers.save_npz('models/{}_{}_{}.model'.format(output, epoch, i), model)
+            serializers.save_npz('models/{}_{}_{}.state'.format(output, epoch, i), O)
 
     print 'save "style.model"'
     serializers.save_npz('models/{}_{}.model'.format(output, epoch), model)
+    serializers.save_npz('models/{}_{}.state'.format(output, epoch), O)
 
 serializers.save_npz('models/{}.model'.format(output), model)
+serializers.save_npz('models/{}.state'.format(output), O)
