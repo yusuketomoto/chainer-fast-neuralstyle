@@ -37,7 +37,7 @@ parser.add_argument('--initmodel', '-i', default=None, type=str,
                     help='initialize the model from given file')
 parser.add_argument('--resume', '-r', default=None, type=str,
                     help='resume the optimization from snapshot')
-parser.add_argument('--output', '-o', default='out', type=str,
+parser.add_argument('--output', '-o', default=None, type=str,
                     help='output model file path without extension')
 parser.add_argument('--lambda_tv', default=10e-4, type=float,
                     help='weight of total variation regularization according to the paper to be set between 10e-4 and 10e-6.')
@@ -55,7 +55,8 @@ n_epoch = args.epoch
 lambda_tv = args.lambda_tv
 lambda_f = args.lambda_feat
 lambda_s = args.lambda_style
-output = args.output
+style_prefix, _ = os.path.splitext(os.path.basename(args.style_image))
+output = style_prefix if args.output == None else args.output
 fs = os.listdir(args.dataset)
 imagepaths = []
 for fn in fs:
