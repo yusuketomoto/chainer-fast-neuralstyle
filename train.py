@@ -6,6 +6,20 @@ from PIL import Image
 from chainer import cuda, Variable, optimizers, serializers
 from net import *
 
+def load_image(path, size):
+    image = Image.open(path).convert('RGB')
+    w,h = image.size
+    if w < h:
+        if w < size:
+            image = image.resize((size, size*h/w))
+            w, h = image.size
+    else:
+        if h < size:
+            image = image.resize((size*w/h, size))
+            w, h = image.size
+    image = image.crop(((w-size)*0.5, (h-size)*0.5, (w+size)*0.5, (h+size)*0.5))
+    return xp.asarray(image, dtype=np.float32).transpose(2, 0, 1)
+
 def gram_matrix(y):
     b, ch, h, w = y.data.shape
     features = F.reshape(y, (b, ch, w*h))
@@ -46,11 +60,12 @@ parser.add_argument('--lambda_style', default=1e1, type=float)
 parser.add_argument('--epoch', '-e', default=2, type=int)
 parser.add_argument('--lr', '-l', default=1e-3, type=float)
 parser.add_argument('--checkpoint', '-c', default=0, type=int)
+parser.add_argument('--image_size', default=256, type=int)
 args = parser.parse_args()
 
 batchsize = args.batchsize
 
-m_epoch = 0
+image_size = args.image_size
 n_epoch = args.epoch
 lambda_tv = args.lambda_tv
 lambda_f = args.lambda_feat
@@ -87,7 +102,7 @@ if args.resume:
     print 'load optimizer state from', args.resume
     serializers.load_npz(args.resume, O)
 
-style = vgg.preprocess(np.asarray(Image.open(args.style_image).convert('RGB').resize((256,256)), dtype=np.float32))
+style = vgg.preprocess(np.asarray(Image.open(args.style_image).convert('RGB').resize((image_size,image_size)), dtype=np.float32))
 style = xp.asarray(style, dtype=xp.float32)
 style_b = xp.zeros((batchsize,) + style.shape, dtype=xp.float32)
 for i in range(batchsize):
@@ -102,9 +117,9 @@ for epoch in range(n_epoch):
         vgg.zerograds()
 
         indices = range(i * batchsize, (i+1) * batchsize)
-        x = xp.zeros((batchsize, 3, 256, 256), dtype=xp.float32)
+        x = xp.zeros((batchsize, 3, image_size, image_size), dtype=xp.float32)
         for j in range(batchsize):
-            x[j] = xp.asarray(Image.open(imagepaths[i*batchsize + j]).convert('RGB').resize((256,256)), dtype=np.float32).transpose(2, 0, 1)
+            x[j] = load_image(imagepaths[i*batchsize + j], image_size)
 
         xc = Variable(x.copy(), volatile=True)
         x = Variable(x)
