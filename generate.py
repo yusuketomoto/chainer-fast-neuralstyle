@@ -1,3 +1,4 @@
+from __future__ import print_function
 import numpy as np
 import argparse
 from PIL import Image
@@ -33,6 +34,6 @@ result = cuda.to_cpu(y.data)
 result = result.transpose(0, 2, 3, 1)
 result = result.reshape((result.shape[1:]))
 result = np.uint8(result)
-print time.time() - start, 'sec'
+print(time.time() - start, 'sec')
 
 Image.fromarray(result).save(args.out)
