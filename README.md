@@ -30,12 +30,12 @@ sh setup_model.sh
 Need to train one image transformation network model per one style target.
 According to the paper, the models are trained on the [Microsoft COCO dataset](http://mscoco.org/dataset/#download).
 ```
-python train.py -s <style_image_path> -d <training_dataset_path> -g 0
+python train.py -s <style_image_path> -d <training_dataset_path> -g <use_gpu ? gpu_id : -1>
 ```
 
 ## Generate
 ```
-python generate.py <input_image_path> -m <model_path> -o <output_image_path>
+python generate.py <input_image_path> -m <model_path> -o <output_image_path> -g <use_gpu ? gpu_id : -1>
 ```
 
 This repo has pretrained models as an example.
