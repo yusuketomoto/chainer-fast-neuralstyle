@@ -53,10 +53,10 @@ parser.add_argument('--resume', '-r', default=None, type=str,
                     help='resume the optimization from snapshot')
 parser.add_argument('--output', '-o', default=None, type=str,
                     help='output model file path without extension')
-parser.add_argument('--lambda_tv', default=10e-4, type=float,
+parser.add_argument('--lambda_tv', default=1e-6, type=float,
                     help='weight of total variation regularization according to the paper to be set between 10e-4 and 10e-6.')
-parser.add_argument('--lambda_feat', default=1e0, type=float)
-parser.add_argument('--lambda_style', default=1e1, type=float)
+parser.add_argument('--lambda_feat', default=1.0, type=float)
+parser.add_argument('--lambda_style', default=5.0, type=float)
 parser.add_argument('--epoch', '-e', default=2, type=int)
 parser.add_argument('--lr', '-l', default=1e-3, type=float)
 parser.add_argument('--checkpoint', '-c', default=0, type=int)
