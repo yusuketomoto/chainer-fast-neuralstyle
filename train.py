@@ -26,17 +26,12 @@ def gram_matrix(y):
     gram = F.batch_matmul(features, features, transb=True)/np.float32(ch*w*h)
     return gram
 
-def total_variation_regularization(x, beta=1):
+def total_variation(x):
     xp = cuda.get_array_module(x.data)
-    wh = Variable(xp.array([[[[1],[-1]],[[1],[-1]],[[1],[-1]]]], dtype=xp.float32))
-    ww = Variable(xp.array([[[[1, -1]],[[1, -1]],[[1, -1]]]], dtype=xp.float32))
-    tvh = lambda x: F.convolution_2d(x, W=wh, pad=1)
-    tvw = lambda x: F.convolution_2d(x, W=ww, pad=1)
-
-    dh = tvh(x)
-    dw = tvw(x)
-    tv = (F.sum(dh**2) + F.sum(dw**2)) ** (beta / 2.)
-    return tv
+    b, ch, h, w = x.data.shape
+    wh = Variable(xp.asarray([[[[1], [-1]], [[0], [0]], [[0], [0]]], [[[0], [0]], [[1], [-1]], [[0], [0]]], [[[0], [0]], [[0], [0]], [[1], [-1]]]], dtype=np.float32), volatile=x.volatile)
+    ww = Variable(xp.asarray([[[[1, -1]], [[0, 0]], [[0, 0]]], [[[0, 0]], [[1, -1]], [[0, 0]]], [[[0, 0]], [[0, 0]], [[1, -1]]]], dtype=np.float32), volatile=x.volatile)
+    return F.sum(F.convolution_2d(x, W=wh) ** 2) + F.sum(F.convolution_2d(x, W=ww) ** 2)
 
 parser = argparse.ArgumentParser(description='Real-time style transfer')
 parser.add_argument('--gpu', '-g', default=-1, type=int,
@@ -138,7 +133,7 @@ for epoch in range(n_epoch):
         for f, f_hat, g_s in zip(feature, feature_hat, gram_s):
             L_style += lambda_s * F.mean_squared_error(gram_matrix(f_hat), Variable(g_s.data))
 
-        L_tv = lambda_tv * total_variation_regularization(y)
+        L_tv = lambda_tv * total_variation(y)
         L = L_feat + L_style + L_tv
 
         print '(epoch {}) batch {}/{}... training loss is...{}'.format(epoch, i, n_iter, L.data)
