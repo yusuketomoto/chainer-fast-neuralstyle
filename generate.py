@@ -1,7 +1,7 @@
 from __future__ import print_function
 import numpy as np
 import argparse
-from PIL import Image
+from PIL import Image, ImageFilter
 import time
 
 import chainer
@@ -14,6 +14,9 @@ parser.add_argument('--gpu', '-g', default=-1, type=int,
                     help='GPU ID (negative value indicates CPU)')
 parser.add_argument('--model', '-m', default='models/style.model', type=str)
 parser.add_argument('--out', '-o', default='out.jpg', type=str)
+parser.add_argument('--median_filter', default=3, type=int)
+parser.add_argument('--padding', default=50, type=int)
+
 args = parser.parse_args()
 
 model = FastStyleNet()
@@ -26,14 +29,19 @@ xp = np if args.gpu < 0 else cuda.cupy
 start = time.time()
 image = xp.asarray(Image.open(args.input).convert('RGB'), dtype=xp.float32).transpose(2, 0, 1)
 image = image.reshape((1,) + image.shape)
+if args.padding > 0:
+	image = np.pad(image, [[0, 0], [0, 0], [args.padding, args.padding], [args.padding, args.padding]], 'symmetric')
 x = Variable(image)
 
 y = model(x)
 result = cuda.to_cpu(y.data)
 
-result = result.transpose(0, 2, 3, 1)
-result = result.reshape((result.shape[1:]))
-result = np.uint8(result)
+if args.padding > 0:
+	result = result[:, :, args.padding:-args.padding, args.padding:-args.padding]
+result = np.uint8(result[0].transpose((1, 2, 0)))
+med = Image.fromarray(result)
+if args.median_filter > 0:
+	med = med.filter(ImageFilter.MedianFilter(args.median_filter))
 print(time.time() - start, 'sec')
 
-Image.fromarray(result).save(args.out)
+med.save(args.out)
