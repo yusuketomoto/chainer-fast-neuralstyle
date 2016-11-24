@@ -1,3 +1,4 @@
+from __future__ import print_function
 import numpy as np
 import os, re
 import argparse
@@ -75,15 +76,15 @@ for fn in fs:
         imagepath = os.path.join(args.dataset,fn)
         imagepaths.append(imagepath)
 n_data = len(imagepaths)
-print 'num traning images:', n_data
+print('num traning images:', n_data)
 n_iter = n_data / batchsize
-print n_iter, 'iterations,', n_epoch, 'epochs'
+print(n_iter, 'iterations,', n_epoch, 'epochs')
 
 model = FastStyleNet()
 vgg = VGG()
 serializers.load_npz('vgg16.model', vgg)
 if args.initmodel:
-    print 'load model from', args.initmodel
+    print('load model from', args.initmodel)
     serializers.load_npz(args.initmodel, model)
 if args.gpu >= 0:
     cuda.get_device(args.gpu).use()
@@ -94,7 +95,7 @@ xp = np if args.gpu < 0 else cuda.cupy
 O = optimizers.Adam(alpha=args.lr)
 O.setup(model)
 if args.resume:
-    print 'load optimizer state from', args.resume
+    print('load optimizer state from', args.resume)
     serializers.load_npz(args.resume, O)
 
 style = vgg.preprocess(np.asarray(Image.open(args.style_image).convert('RGB').resize((image_size,image_size)), dtype=np.float32))
@@ -106,7 +107,7 @@ feature_s = vgg(Variable(style_b, volatile=True))
 gram_s = [gram_matrix(y) for y in feature_s]
 
 for epoch in range(n_epoch):
-    print 'epoch', epoch
+    print('epoch', epoch)
     for i in range(n_iter):
         model.zerograds()
         vgg.zerograds()
@@ -136,7 +137,7 @@ for epoch in range(n_epoch):
         L_tv = lambda_tv * total_variation(y)
         L = L_feat + L_style + L_tv
 
-        print '(epoch {}) batch {}/{}... training loss is...{}'.format(epoch, i, n_iter, L.data)
+        print('(epoch {}) batch {}/{}... training loss is...{}'.format(epoch, i, n_iter, L.data))
 
         L.backward()
         O.update()
@@ -145,7 +146,7 @@ for epoch in range(n_epoch):
             serializers.save_npz('models/{}_{}_{}.model'.format(output, epoch, i), model)
             serializers.save_npz('models/{}_{}_{}.state'.format(output, epoch, i), O)
 
-    print 'save "style.model"'
+    print('save "style.model"')
     serializers.save_npz('models/{}_{}.model'.format(output, epoch), model)
     serializers.save_npz('models/{}_{}.state'.format(output, epoch), O)
 
