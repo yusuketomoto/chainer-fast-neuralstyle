@@ -1,3 +1,4 @@
+from __future__ import print_function
 from chainer import link
 from chainer.links.caffe import CaffeFunction
 from chainer import serializers
@@ -22,17 +23,17 @@ def copy_model(src, dst):
                     match = False
                     break
             if not match:
-                print 'Ignore %s because of parameter mismatch' % child.name
+                print('Ignore %s because of parameter mismatch' % child.name)
                 continue
             for a, b in zip(child.namedparams(), dst_child.namedparams()):
                 b[1].data = a[1].data
-            print 'Copy %s' % child.name
+            print('Copy %s' % child.name)
 
-print 'load VGG16 caffemodel'
+print('load VGG16 caffemodel')
 ref = CaffeFunction('VGG_ILSVRC_16_layers.caffemodel')
 vgg = VGG()
-print 'copy weights'
+print('copy weights')
 copy_model(ref, vgg)
 
-print 'save "vgg16.model"'
+print('save "vgg16.model"')
 serializers.save_npz('vgg16.model', vgg)
