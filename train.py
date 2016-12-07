@@ -1,4 +1,4 @@
-from __future__ import print_function
+from __future__ import print_function, division
 import numpy as np
 import os, re
 import argparse
@@ -77,7 +77,7 @@ for fn in fs:
         imagepaths.append(imagepath)
 n_data = len(imagepaths)
 print('num traning images:', n_data)
-n_iter = n_data / batchsize
+n_iter = n_data // batchsize
 print(n_iter, 'iterations,', n_epoch, 'epochs')
 
 model = FastStyleNet()
