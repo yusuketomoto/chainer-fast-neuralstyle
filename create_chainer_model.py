@@ -4,6 +4,7 @@ from chainer.links.caffe import CaffeFunction
 from chainer import serializers
 from net import *
 
+# http://qiita.com/tabe2314/items/6c0c1b769e12ab1e2614
 def copy_model(src, dst):
     assert isinstance(src, link.Chain)
     assert isinstance(dst, link.Chain)
