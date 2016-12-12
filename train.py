@@ -12,11 +12,11 @@ def load_image(path, size):
     w,h = image.size
     if w < h:
         if w < size:
-            image = image.resize((size, size*h/w))
+            image = image.resize((size, size*h//w))
             w, h = image.size
     else:
         if h < size:
-            image = image.resize((size*w/h, size))
+            image = image.resize((size*w//h, size))
             w, h = image.size
     image = image.crop(((w-size)*0.5, (h-size)*0.5, (w+size)*0.5, (h+size)*0.5))
     return xp.asarray(image, dtype=np.float32).transpose(2, 0, 1)
