@@ -52,16 +52,16 @@ class FastStyleNet(chainer.Chain):
         )
 
     def __call__(self, x, test=False):
-        h = self.b1(F.elu(self.c1(x)), test=test)
-        h = self.b2(F.elu(self.c2(h)), test=test)
-        h = self.b3(F.elu(self.c3(h)), test=test)
+        h = F.relu(self.b1(self.c1(x), test=test))
+        h = F.relu(self.b2(self.c2(h), test=test))
+        h = F.relu(self.b3(self.c3(h), test=test))
         h = self.r1(h, test=test)
         h = self.r2(h, test=test)
         h = self.r3(h, test=test)
         h = self.r4(h, test=test)
         h = self.r5(h, test=test)
-        h = self.b4(F.elu(self.d1(h)), test=test)
-        h = self.b5(F.elu(self.d2(h)), test=test)
+        h = F.relu(self.b4(self.d1(h), test=test))
+        h = F.relu(self.b5(self.d2(h), test=test))
         y = self.d3(h)
         return (F.tanh(y)+1)*127.5
 
