@@ -60,9 +60,9 @@ class FastStyleNet(chainer.Chain):
         h = self.r3(h, test=test)
         h = self.r4(h, test=test)
         h = self.r5(h, test=test)
-        h = F.unpooling_2d(h, 2, 2, cover_all=False)
+        h = F.unpooling_2d(h, 2, 2, cover_all=test)
         h = F.relu(self.b4(self.d1(h), test=test))
-        h = F.unpooling_2d(h, 2, 2, cover_all=False)
+        h = F.unpooling_2d(h, 2, 2, cover_all=test)
         h = F.relu(self.b5(self.d2(h), test=test))
         y = self.d3(h)
         return (F.tanh(y)+1)*127.5
