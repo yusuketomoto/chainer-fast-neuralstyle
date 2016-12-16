@@ -57,8 +57,9 @@ Fashizzle Dizzle created pre-trained models collection repository, [chainer-fast
 - Training with batchsize(n>=2) causes unstable result.
 
 ## No Backward Compatibility
+##### Dec. 14, 2016
 ##### Jul. 19, 2016
-This version is not compatible with the previous versions. You can't use models trained by the previous implementation. Sorry for the inconvenience!
+Each version above breaks backward compatibility. You can't use models trained by the previous implementation. Sorry for the inconvenience!
 
 ## License
 MIT
@@ -70,3 +71,4 @@ Codes written in this repository based on following nice works, thanks to the au
 
 - [chainer-gogh](https://github.com/mattya/chainer-gogh.git) Chainer implementation of neural-style. I heavily referenced it.
 - [chainer-cifar10](https://github.com/mitmul/chainer-cifar10) Residual block implementation is referred.
+- [gan-resize-convolution](https://github.com/hvy/gan-resize-convolution) resize-convolution
