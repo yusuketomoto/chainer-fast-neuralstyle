@@ -59,9 +59,6 @@ python generate.py sample_images/tubingen.jpg -m models/seurat.model -o sample_i
 <img src="https://raw.githubusercontent.com/yusuketomoto/chainer-fast-neuralstyle/resize-conv/sample_images/output_keep_colors_2.jpg" height="200px">
 
 
-## A collection of pre-trained models
-Fashizzle Dizzle created pre-trained models collection repository, [chainer-fast-neuralstyle-models](https://github.com/gafr/chainer-fast-neuralstyle-models). You can find a variety of models.
-
 ## Difference from paper
 - Convolution kernel size 4 instead of 3.
 - Training with batchsize(n>=2) causes unstable result.
