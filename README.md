@@ -51,6 +51,13 @@ or
 python generate.py sample_images/tubingen.jpg -m models/seurat.model -o sample_images/output.jpg
 ```
 
+#### Transfer only style but not color (**--keep_color option**)
+`python generate.py <input_image_path> -m <model_path> -o <output_image_path> -g <use_gpu ? gpu_id : -1> --keep_colors`
+
+<img src="https://raw.githubusercontent.com/yusuketomoto/chainer-fast-neuralstyle/resize-conv/sample_images/output_keep_colors_1.jpg" height="200px">
+<img src="https://raw.githubusercontent.com/yusuketomoto/chainer-fast-neuralstyle/resize-conv/sample_images/output_keep_colors_2.jpg" height="200px">
+
+
 ## A collection of pre-trained models
 Fashizzle Dizzle created pre-trained models collection repository, [chainer-fast-neuralstyle-models](https://github.com/gafr/chainer-fast-neuralstyle-models). You can find a variety of models.
 
