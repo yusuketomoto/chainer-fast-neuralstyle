@@ -57,8 +57,10 @@ Fashizzle Dizzle created pre-trained models collection repository, [chainer-fast
 - Training with batchsize(n>=2) causes unstable result.
 
 ## No Backward Compatibility
-- Dec. 14, 2016
-- Jul. 19, 2016
+**Dec. 14, 2016**
+
+**Jul. 19, 2016**
+
 Each version above breaks backward compatibility. You can't use models trained by the previous implementation. Sorry for the inconvenience!
 
 ## License
