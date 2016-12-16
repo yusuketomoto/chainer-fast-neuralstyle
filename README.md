@@ -1,13 +1,13 @@
 # Chainer implementation of "Perceptual Losses for Real-Time Style Transfer and Super-Resolution"
 Fast artistic style transfer by using feed forward network.
 
-<img src="https://raw.githubusercontent.com/yusuketomoto/chainer-fast-neuralstyle/master/sample_images/tubingen.jpg" height="200px">
+<img src="https://raw.githubusercontent.com/yusuketomoto/chainer-fast-neuralstyle/resize-conv/sample_images/tubingen.jpg" height="200px">
 
-<img src="https://raw.githubusercontent.com/yusuketomoto/chainer-fast-neuralstyle/master/sample_images/style_1.png" height="200px">
-<img src="https://raw.githubusercontent.com/yusuketomoto/chainer-fast-neuralstyle/master/sample_images/output_1.jpg" height="200px">
+<img src="https://raw.githubusercontent.com/yusuketomoto/chainer-fast-neuralstyle/resize-conv/sample_images/style_1.png" height="200px">
+<img src="https://raw.githubusercontent.com/yusuketomoto/chainer-fast-neuralstyle/resize-conv/sample_images/output_1.jpg" height="200px">
 
-<img src="https://raw.githubusercontent.com/yusuketomoto/chainer-fast-neuralstyle/master/sample_images/style_2.png" height="200px">
-<img src="https://raw.githubusercontent.com/yusuketomoto/chainer-fast-neuralstyle/master/sample_images/output_2.jpg" height="200px">
+<img src="https://raw.githubusercontent.com/yusuketomoto/chainer-fast-neuralstyle/resize-conv/sample_images/style_2.png" height="200px">
+<img src="https://raw.githubusercontent.com/yusuketomoto/chainer-fast-neuralstyle/resize-conv/sample_images/output_2.jpg" height="200px">
 
 - input image size: 1024x768
 - process time(CPU): 17.78sec (Core i7-5930K)
@@ -57,8 +57,8 @@ Fashizzle Dizzle created pre-trained models collection repository, [chainer-fast
 - Training with batchsize(n>=2) causes unstable result.
 
 ## No Backward Compatibility
-##### Dec. 14, 2016
-##### Jul. 19, 2016
+- Dec. 14, 2016
+- Jul. 19, 2016
 Each version above breaks backward compatibility. You can't use models trained by the previous implementation. Sorry for the inconvenience!
 
 ## License
