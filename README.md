@@ -54,7 +54,10 @@ python generate.py sample_images/tubingen.jpg -m models/seurat.model -o sample_i
 #### Transfer only style but not color (**--keep_color option**)
 `python generate.py <input_image_path> -m <model_path> -o <output_image_path> -g <use_gpu ? gpu_id : -1> --keep_colors`
 
+<img src="https://raw.githubusercontent.com/yusuketomoto/chainer-fast-neuralstyle/resize-conv/sample_images/output_1.jpg" height="200px">
 <img src="https://raw.githubusercontent.com/yusuketomoto/chainer-fast-neuralstyle/resize-conv/sample_images/output_keep_colors_1.jpg" height="200px">
+
+<img src="https://raw.githubusercontent.com/yusuketomoto/chainer-fast-neuralstyle/resize-conv/sample_images/output_2.jpg" height="200px">
 <img src="https://raw.githubusercontent.com/yusuketomoto/chainer-fast-neuralstyle/resize-conv/sample_images/output_keep_colors_2.jpg" height="200px">
 
 
